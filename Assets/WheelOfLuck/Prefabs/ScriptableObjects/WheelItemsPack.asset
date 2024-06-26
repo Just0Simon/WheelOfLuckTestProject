@@ -9,19 +9,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c9e48e4dbcc3f4fb2fbcf401ecb533, type: 3}
+  m_Script: {fileID: 11500000, guid: ded7971e2b80f6645adc3b93ce22c3fe, type: 3}
   m_Name: WheelItemsPack
   m_EditorClassIdentifier: 
-  _items:
-  - Icon: {fileID: 0}
-    Label: 
-    Amount: 0
-    Chance: 0
-    Index: 0
-    _weight: 0
-  - Icon: {fileID: 0}
-    Label: 
-    Amount: 0
-    Chance: 0
-    Index: 0
-    _weight: 0
+  _maxItemsAtOnce: 5
+  _itemsPool:
+  - {fileID: 11400000, guid: 94f26b6689908f348ad6bc7e471b1d1f, type: 2}
+  - {fileID: 11400000, guid: bc6e12891f9967148baa7086ef9b1b70, type: 2}
+  - {fileID: 11400000, guid: 74dc3d8a0b73cbb4ba8a0f0d1e022080, type: 2}
+  - {fileID: 11400000, guid: 5fd34d29890a1a64083bce294aaa516b, type: 2}
+  - {fileID: 11400000, guid: 69255613e2158ef4388396c1fd220cd8, type: 2}
+  - {fileID: 11400000, guid: cf5df0d7345ff7349a176621d9df1930, type: 2}
+  _accumulatedWeight: 425
+  _nonZeroChanceItemIndexes: 0000000001000000020000000300000004000000
+  _runtimeItems:
+  - {fileID: 11400000, guid: 94f26b6689908f348ad6bc7e471b1d1f, type: 2}
+  - {fileID: 11400000, guid: bc6e12891f9967148baa7086ef9b1b70, type: 2}
+  - {fileID: 11400000, guid: 74dc3d8a0b73cbb4ba8a0f0d1e022080, type: 2}
+  - {fileID: 11400000, guid: 5fd34d29890a1a64083bce294aaa516b, type: 2}
+  - {fileID: 11400000, guid: 69255613e2158ef4388396c1fd220cd8, type: 2}
+  - {fileID: 11400000, guid: cf5df0d7345ff7349a176621d9df1930, type: 2}
+  _selectedItems:
+  - {fileID: 11400000, guid: 94f26b6689908f348ad6bc7e471b1d1f, type: 2}
+  - {fileID: 11400000, guid: bc6e12891f9967148baa7086ef9b1b70, type: 2}
+  - {fileID: 11400000, guid: 74dc3d8a0b73cbb4ba8a0f0d1e022080, type: 2}
+  - {fileID: 11400000, guid: 5fd34d29890a1a64083bce294aaa516b, type: 2}
+  - {fileID: 11400000, guid: 69255613e2158ef4388396c1fd220cd8, type: 2}

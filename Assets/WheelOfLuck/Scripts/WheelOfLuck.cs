@@ -1,49 +1,47 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace WheelOfLuck
 {
     public class WheelOfLuck : MonoBehaviour
     {
-        [Header("Wheel items:")]
-        [SerializeField] private List<WheelItem> _items;
-
+        [SerializeField] private WheelItemsPack _itemsPack;
         [Space]
         [SerializeField] private WheelDrawer _drawer;
         [SerializeField] private SpinController _spinController;
 
         // Events
         public event Action OnSpinStartEvent;
-        public event Action<WheelItem> OnSpinEndEvent;
+        public event Action<WheelItemSO> OnSpinEndEvent;
 
         public bool IsSpinning { get; private set; }
 
+        private IReadOnlyList<WheelItemSO> Items => _itemsPack.Items;
         private int _minItemsCount = 2;
         private int _maxItemsCount = 12;
 
         private void Awake()
         {
-            _drawer.Initialize(_items, _minItemsCount, _maxItemsCount);
+            _drawer.Initialize(Items, _minItemsCount, _maxItemsCount);
+            _spinController.Initialize(Items);
+            
             _spinController.OnSpinStart += OnSpinStart;
+            _spinController.OnSpinEnd += OnSpinEnd;
         }
-
-
+        
         private void Start()
         {
             _drawer.Generate();
-
-            _spinController.CalculateWeightsAndIndices();
-            
         }
 
+        [ContextMenu("Spin")]
         public void Spin()
         {
             if(IsSpinning) 
                 return;
 
-            _spinController.Spin(_accumulatedWeight, nonZeroChancesIndices);
+            _spinController.Spin(_itemsPack.TotalWeight, _itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
         }
 
         private void OnSpinStart()
@@ -51,7 +49,7 @@ namespace WheelOfLuck
             IsSpinning = true;
         }
 
-        private void OnSpinEnd(WheelItem item)
+        private void OnSpinEnd(WheelItemSO item)
         {
             IsSpinning = false;
             OnSpinEndEvent?.Invoke(item);
@@ -62,7 +60,7 @@ namespace WheelOfLuck
             OnSpinStartEvent += action;
         }
 
-        public void AddOnSpinEndAction(Action<WheelItem> action)
+        public void AddOnSpinEndAction(Action<WheelItemSO> action)
         {
             OnSpinEndEvent += action;
         }

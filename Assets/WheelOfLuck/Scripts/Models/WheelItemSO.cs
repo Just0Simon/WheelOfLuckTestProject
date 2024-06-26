@@ -2,10 +2,8 @@
 
 namespace WheelOfLuck 
 {
-    public abstract class WheelItemSO : ScriptableObject, ICollectable
+    public class WheelItemSO : ScriptableObject, ICollectable
     {
-        public bool Granted;
-
         public Sprite Icon;
         public string Label;
 
@@ -19,6 +17,9 @@ namespace WheelOfLuck
         [HideInInspector] public int Index;
         [HideInInspector] public double _weight = 0f;
 
-        public abstract void Collect();
+        public virtual void Collect()
+        {
+            
+        }
     }
 }

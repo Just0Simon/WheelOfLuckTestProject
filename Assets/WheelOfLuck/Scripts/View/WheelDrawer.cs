@@ -25,9 +25,9 @@ namespace WheelOfLuck
         private float _pieceAngle;
         private float _halfPieceAngle;
         private float _halfPieceAngleWithPaddings;
-        private IReadOnlyList<WheelItem> _items;
+        private IReadOnlyList<WheelItemSO> _items;
 
-        public void Initialize(IReadOnlyList<WheelItem> items, int minItems, int maxItems)
+        public void Initialize(IReadOnlyList<WheelItemSO> items, int minItems, int maxItems)
         {
             _items = items;
             _minItems = minItems;
@@ -52,13 +52,11 @@ namespace WheelOfLuck
 
             for (int i = 0; i < _items.Count; i++)
                 DrawPiece(i);
-
-            Destroy(_wheelPiecePrefab);
         }
 
         private void DrawPiece(int index)
         {
-            WheelItem piece = _items[index];
+            WheelItemSO piece = _items[index];
             Transform pieceTrns = InstantiatePiece().transform.GetChild(0);
 
             pieceTrns.GetChild(0).GetComponent<Image>().sprite = piece.Icon;

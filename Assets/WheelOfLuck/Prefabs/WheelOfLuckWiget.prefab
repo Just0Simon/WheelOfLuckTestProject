@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3338385949258004527}
   - component: {fileID: 1373168299621861497}
+  - component: {fileID: 7442860724496055164}
+  - component: {fileID: 2630473927636342888}
   m_Layer: 5
   m_Name: WheelOfLuckWiget
   m_TagString: Untagged
@@ -26,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 441846917480254944}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1343191796303254048}
@@ -51,9 +53,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a128107bcbd2349ac787dce3c7d5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showFirstGranted: 1
-  _grantedItemsPack: {fileID: 11400000, guid: 94f26b6689908f348ad6bc7e471b1d1f, type: 2}
-  _itemsPack: {fileID: 11400000, guid: 94f26b6689908f348ad6bc7e471b1d1f, type: 2}
+  _itemsPack: {fileID: 11400000, guid: c1d5a75cf0a791746a1343f9fe9b7b57, type: 2}
+  _drawer: {fileID: 7442860724496055164}
+  _spinController: {fileID: 2630473927636342888}
+--- !u!114 &7442860724496055164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441846917480254944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 477b7fb8d9a8e0d4d9222f5e89b83c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelSize: 1
+  _wheelTransform: {fileID: 3338385949258004527}
+  _wheelPiecePrefab: {fileID: 1013547879587396, guid: de94ee490efb2cf45a7cf01d43dee1c9, type: 3}
+  _wheelPiecesParent: {fileID: 2782134129158989225}
+  _linePrefab: {fileID: 2185511708486862109, guid: 06a3fc71588d797408848797f1b14701, type: 3}
+  _linesParent: {fileID: 661727717914025604}
+--- !u!114 &2630473927636342888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441846917480254944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b84482389c1e7bb4fab1f77775642652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _wheelCircle: {fileID: 5516197578175535524}
+  spinDuration: 8
 --- !u!1 &3353029648910014131
 GameObject:
   m_ObjectHideFlags: 0

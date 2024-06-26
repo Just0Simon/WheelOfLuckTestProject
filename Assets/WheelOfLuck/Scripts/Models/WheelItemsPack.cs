@@ -1,30 +1,58 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace WheelOfLuck
 {
     [CreateAssetMenu(fileName = "WheelItemsPack", order = 1, menuName = "WheelOfLuck/ItemsPack")]
     public class WheelItemsPack : ScriptableObject
     {
-        public List<WheelItemSO> Items => _runtimeItems;;
-        [SerializeField] private List<WheelItemSO> _itemsPool;
+        public List<WheelItemSO> Items => _selectedItems;
+        public IReadOnlyList<int> NonZeroChanceItemIndexes => _nonZeroChanceItemIndexes;
+        public double TotalWeight => _accumulatedWeight;
 
-        private double _accumulatedWeight;
-        private List<WheelItemSO> _runtimeItems;
-        private List<WheelItemSO> _selectedItems;
+        [Range(0, 5)]
+        [SerializeField] private int _firstItemGrantedCount = 2;
+        [SerializeField] private int _maxItemsOnWheel = 5;
+        private int _grantedCollectedItemsCount = 0;
+
+        [Header("What it will consist of")]
+        [SerializeField] private int _consumebleItemsCount = 3;
+        [SerializeField] private int _uniqueItemsCount = 2;
+        
+        [Header("Pool of wheel's items")]
+        [SerializeField] private List<WheelItemSO> _itemsPool;
+        
+        [SerializeField] private double _accumulatedWeight;
+        [SerializeField] private List<int> _nonZeroChanceItemIndexes;
+        [SerializeField] private List<WheelItemSO> _selectedItems;
 
         public WheelItemSO ReplaceItem(WheelItemSO collectedItem)
         {
-            return Items[0];
+            if(_itemsPool.Count == _selectedItems.Count)
+                return collectedItem;
+            
+            _selectedItems.Remove(collectedItem);
+            
+            WheelItemSO item = null;
+            do
+            {
+                item = _itemsPool[Random.Range(0, _itemsPool.Count)];
+            } while (_selectedItems.Contains(item) || collectedItem == item);
+
+            return item;
         }
 
         public virtual int GetRandomItemIndex()
         {
+            if (_firstItemGrantedCount > _grantedCollectedItemsCount)
+            {
+                return _grantedCollectedItemsCount;
+            }
+            
             double r = Random.Range(0, 2) * _accumulatedWeight;
             Debug.Log(Random.Range(0, 2));
-            for (int i = 0; i < _itemsPool.Count; i++)
-                if (_itemsPool[i]._weight >= r)
+            for (int i = 0; i < Items.Count; i++)
+                if (Items[i]._weight >= r)
                     return i;
 
             return 0;
@@ -32,26 +60,38 @@ namespace WheelOfLuck
 
         public void CalculateWeightsAndIndices()
         {
-            for (int i = 0; i < _itemsPool.Count; i++)
+            for (int i = 0; i < _selectedItems.Count; i++)
             {
-                WheelItemSO item = _itemsPool[i];
+                WheelItemSO item = _selectedItems[i];
 
-                //add weights:
                 _accumulatedWeight += item.Chance;
                 item._weight = _accumulatedWeight;
 
-                //add index :
                 item.Index = i;
 
-                //save non zero chance indices:
                 if (item.Chance > 0)
-                    _grantedItemsList.Add(i);
+                    _nonZeroChanceItemIndexes.Add(i);
             }
         }
 
         private void OnValidate()
         {
-            _runtimeItems = new List<WheelItemSO>(_itemsPool);
+            ValidateItemsPool();
+        }
+
+        private void ValidateItemsPool()
+        {
+            _accumulatedWeight = 0;
+            
+            if (_itemsPool.Count == 0)
+                return;
+            
+            _nonZeroChanceItemIndexes = new List<int>();
+
+            int selectedItemsCount = _itemsPool.Count < _maxItemsOnWheel ? _itemsPool.Count : _maxItemsOnWheel;
+            _selectedItems = new List<WheelItemSO>(_itemsPool.GetRange(0, selectedItemsCount));
+
+            CalculateWeightsAndIndices();
         }
     }
 }

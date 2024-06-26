@@ -16,46 +16,46 @@ namespace WheelOfLuck
         [Range(1, 20)] public int spinDuration = 8;
 
         public event Action OnSpinStart;
-        public event Action OnSpinEnd;
+        public event Action<WheelItemSO> OnSpinEnd;
 
-        private IReadOnlyList<WheelItem> _items;
+        private IReadOnlyList<WheelItemSO> _items;
 
-        private float _pieceAngle;
-        private float _halfPieceAngle;
-        private float _halfPieceAngleWithPaddings;
+        private float _itemAngle;
+        private float _halfItemAngle;
+        private float _halfItemAngleWithPaddings;
 
         private double _accumulatedWeight;
 
         private List<int> _grantedItemsList = new List<int>();
 
-        public void Initialize(IReadOnlyList<WheelItem> items)
+        public void Initialize(IReadOnlyList<WheelItemSO> items)
         {
             _items = items;
 
-            _pieceAngle = 360 / _items.Count;
-            _halfPieceAngle = _pieceAngle / 2f;
-            _halfPieceAngleWithPaddings = _halfPieceAngle - (_halfPieceAngle / 4f);
+            _itemAngle = 360f / _items.Count;
+            _halfItemAngle = _itemAngle / 2f;
+            _halfItemAngleWithPaddings = _halfItemAngle - (_halfItemAngle / 4f);
         }
 
-        public void Spin(double accumulatedWeight, List<int> chellengingItemIndexes)
+        public void Spin(double accumulatedWeight, int randomItemIndex, IReadOnlyList<int> nonZeroChanceItemIndexes)
         {
             _accumulatedWeight = accumulatedWeight;
 
             OnSpinStart?.Invoke();
 
-            int index = GetRandomPieceIndex();
-            WheelItem piece = _items[index];
+            int index = randomItemIndex;
+            WheelItemSO item = _items[index];
 
-            if (piece.Chance == 0 && chellengingItemIndexes.Count != 0)
+            if (item.Chance == 0 && nonZeroChanceItemIndexes.Count != 0)
             {
-                index = chellengingItemIndexes[Random.Range(0, chellengingItemIndexes.Count)];
-                piece = _items[index];
+                index = nonZeroChanceItemIndexes[Random.Range(0, nonZeroChanceItemIndexes.Count)];
+                item = _items[index];
             }
 
-            float angle = -(_pieceAngle * index);
+            float angle = -(_itemAngle * index);
 
-            float rightOffset = (angle - _halfPieceAngleWithPaddings) % 360;
-            float leftOffset = (angle + _halfPieceAngleWithPaddings) % 360;
+            float rightOffset = (angle - _halfItemAngleWithPaddings) % 360;
+            float leftOffset = (angle + _halfItemAngleWithPaddings) % 360;
 
             float randomAngle = Random.Range(leftOffset, rightOffset);
 
@@ -71,7 +71,7 @@ namespace WheelOfLuck
             .SetEase(Ease.InOutQuart)
             .OnUpdate(() => {
                 float diff = Mathf.Abs(prevAngle - currentAngle);
-                if (diff >= _halfPieceAngle)
+                if (diff >= _halfItemAngle)
                 {
                     if (isIndicatorOnTheLine)
                     {
@@ -83,7 +83,7 @@ namespace WheelOfLuck
                 currentAngle = _wheelCircle.eulerAngles.z;
             })
             .OnComplete(() => {
-                OnSpinEnd?.Invoke();
+                OnSpinEnd?.Invoke(item);
             });
         }
 
