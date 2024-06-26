@@ -11,20 +11,19 @@ namespace WheelOfLuck
         [Range(0.2f, 2f)]
         [SerializeField] private float _wheelSize = 1f;
         [SerializeField] private Transform _wheelTransform;
-        [SerializeField] private GameObject _wheelPiecePrefab;
-        [SerializeField] private Transform _wheelPiecesParent;
+        [SerializeField] private GameObject _wheelItemPrefab;
+        [SerializeField] private Transform _wheelItemsParent;
         [SerializeField] private GameObject _linePrefab;
         [SerializeField] private Transform _linesParent;
 
-
         private int _minItems;
         private int _maxItems;
-        private Vector2 pieceMinSize = new Vector2(81f, 146f);
-        private Vector2 pieceMaxSize = new Vector2(144f, 213f);
+        private Vector2 _itemMinSize = new Vector2(81f, 146f);
+        private Vector2 _itemMaxSize = new Vector2(144f, 213f);
 
-        private float _pieceAngle;
-        private float _halfPieceAngle;
-        private float _halfPieceAngleWithPaddings;
+        private float _itemAngle;
+        private float _halfItemAngle;
+        private float _halfItemAngleWithPaddings;
         private IReadOnlyList<WheelItemSO> _items;
 
         public void Initialize(IReadOnlyList<WheelItemSO> items, int minItems, int maxItems)
@@ -33,22 +32,35 @@ namespace WheelOfLuck
             _minItems = minItems;
             _maxItems = maxItems;
 
-            _pieceAngle = 360 / _items.Count;
+            _itemAngle = 360 / _items.Count;
 
-            _halfPieceAngle = _pieceAngle / 2f;
-            _halfPieceAngleWithPaddings = _halfPieceAngle - (_halfPieceAngle / 4f);
+            _halfItemAngle = _itemAngle / 2f;
+            _halfItemAngleWithPaddings = _halfItemAngle - (_halfItemAngle / 4f);
+        }
+
+        private void ClearItemsAndLinesContainers()
+        {
+            for(int i = 0; i < _linesParent.childCount; i++)
+            {
+                Destroy(_linesParent.GetChild(i).gameObject);
+            }
+
+            for(int i = 0; i < _wheelItemsParent.childCount; i++)
+            {
+                Destroy(_wheelItemsParent.GetChild(i).gameObject);
+            }
         }
 
         public void Generate()
         {
-            _wheelPiecePrefab = InstantiatePiece();
+            ClearItemsAndLinesContainers();
 
-            RectTransform rt = _wheelPiecePrefab.transform.GetChild(0).GetComponent<RectTransform>();
-            float pieceWidth = Mathf.Lerp(pieceMinSize.x, pieceMaxSize.x, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
-            float pieceHeight = Mathf.Lerp(pieceMinSize.y, pieceMaxSize.y, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
+            RectTransform rt = _wheelItemPrefab.transform.GetChild(0).GetComponent<RectTransform>();
+            float itemWidth = Mathf.Lerp(_itemMinSize.x, _itemMaxSize.x, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
+            float itemHeight = Mathf.Lerp(_itemMinSize.y, _itemMaxSize.y, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
 
-            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, pieceWidth);
-            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, pieceHeight);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, itemWidth);
+            rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, itemHeight);
 
             for (int i = 0; i < _items.Count; i++)
                 DrawPiece(i);
@@ -56,27 +68,27 @@ namespace WheelOfLuck
 
         private void DrawPiece(int index)
         {
-            WheelItemSO piece = _items[index];
-            Transform pieceTrns = InstantiatePiece().transform.GetChild(0);
+            WheelItemSO item = _items[index];
+            Transform itemTrns = InstantiateItem().transform.GetChild(0);
 
-            pieceTrns.GetChild(0).GetComponent<Image>().sprite = piece.Icon;
-            pieceTrns.GetChild(1).GetComponent<TMP_Text>().text = piece.Label;
-            pieceTrns.GetChild(2).GetComponent<TMP_Text>().text = piece.Amount.ToString();
+            itemTrns.GetChild(0).GetComponent<Image>().sprite = item.Icon;
+            itemTrns.GetChild(1).GetComponent<TMP_Text>().text = item.Label;
+            itemTrns.GetChild(2).GetComponent<TMP_Text>().text = item.Amount.ToString();
 
             DrawLine(index);
 
-            pieceTrns.RotateAround(_wheelPiecesParent.position, Vector3.back, _pieceAngle * index);
+            itemTrns.RotateAround(_wheelItemsParent.position, Vector3.back, _itemAngle * index);
         }
 
         private void DrawLine(int itemIndex)
         {
             Transform lineTrns = Instantiate(_linePrefab, _linesParent.position, Quaternion.identity, _linesParent).transform;
-            lineTrns.RotateAround(_wheelPiecesParent.position, Vector3.back, (_pieceAngle * itemIndex) + _halfPieceAngle);
+            lineTrns.RotateAround(_wheelItemsParent.position, Vector3.back, (_itemAngle * itemIndex) + _halfItemAngle);
         }
 
-        private GameObject InstantiatePiece()
+        private GameObject InstantiateItem()
         {
-            return Instantiate(_wheelPiecePrefab, _wheelPiecesParent.position, Quaternion.identity, _wheelPiecesParent);
+            return Instantiate(_wheelItemPrefab, _wheelItemsParent.position, Quaternion.identity, _wheelItemsParent);
         }
 
         private void OnValidate()

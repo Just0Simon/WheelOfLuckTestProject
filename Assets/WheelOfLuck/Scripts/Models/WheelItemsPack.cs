@@ -7,7 +7,7 @@ namespace WheelOfLuck
     public class WheelItemsPack : ScriptableObject
     {
         public List<WheelItemSO> Items => _selectedItems;
-        public IReadOnlyList<int> NonZeroChanceItemIndexes => _nonZeroChanceItemIndexes;
+        public IReadOnlyList<int> NonZeroChanceItemIndexes => _selectedItemIndexes;
         public double TotalWeight => _accumulatedWeight;
 
         [Range(0, 5)]
@@ -22,14 +22,22 @@ namespace WheelOfLuck
         [Header("Pool of wheel's items")]
         [SerializeField] private List<WheelItemSO> _itemsPool;
         
-        [SerializeField] private double _accumulatedWeight;
-        [SerializeField] private List<int> _nonZeroChanceItemIndexes;
+        private double _accumulatedWeight;
+        private List<int> _selectedItemIndexes;
+
+        [Space]
+        [Header("Automated")]
         [SerializeField] private List<WheelItemSO> _selectedItems;
 
-        public WheelItemSO ReplaceItem(WheelItemSO collectedItem)
+        public void ReplaceItem(WheelItemSO collectedItem)
         {
-            if(_itemsPool.Count == _selectedItems.Count)
-                return collectedItem;
+            if(_itemsPool.IndexOf(collectedItem) < _firstItemGrantedCount - 1)
+            {
+                _grantedCollectedItemsCount++;
+            }
+
+           if (_itemsPool.Count == _selectedItems.Count)
+                return;
             
             _selectedItems.Remove(collectedItem);
             
@@ -38,8 +46,10 @@ namespace WheelOfLuck
             {
                 item = _itemsPool[Random.Range(0, _itemsPool.Count)];
             } while (_selectedItems.Contains(item) || collectedItem == item);
+            
+            _selectedItems.Add(item);
 
-            return item;
+            CalculateWeightsAndIndices();
         }
 
         public virtual int GetRandomItemIndex()
@@ -50,7 +60,7 @@ namespace WheelOfLuck
             }
             
             double r = Random.Range(0, 2) * _accumulatedWeight;
-            Debug.Log(Random.Range(0, 2));
+
             for (int i = 0; i < Items.Count; i++)
                 if (Items[i]._weight >= r)
                     return i;
@@ -69,8 +79,7 @@ namespace WheelOfLuck
 
                 item.Index = i;
 
-                if (item.Chance > 0)
-                    _nonZeroChanceItemIndexes.Add(i);
+                _selectedItemIndexes.Add(i);
             }
         }
 
@@ -86,12 +95,19 @@ namespace WheelOfLuck
             if (_itemsPool.Count == 0)
                 return;
             
-            _nonZeroChanceItemIndexes = new List<int>();
+            _selectedItemIndexes = new List<int>();
 
             int selectedItemsCount = _itemsPool.Count < _maxItemsOnWheel ? _itemsPool.Count : _maxItemsOnWheel;
-            _selectedItems = new List<WheelItemSO>(_itemsPool.GetRange(0, selectedItemsCount));
+            _selectedItems = new List<WheelItemSO>(_itemsPool.GetRange(_grantedCollectedItemsCount, selectedItemsCount));
 
             CalculateWeightsAndIndices();
+        }
+
+        [ContextMenu("Custom Reset")]
+        public void Reset()
+        {
+            _accumulatedWeight = 0;
+            _grantedCollectedItemsCount = 0;
         }
     }
 }

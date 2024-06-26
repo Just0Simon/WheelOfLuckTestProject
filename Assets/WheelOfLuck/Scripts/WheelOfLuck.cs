@@ -41,7 +41,7 @@ namespace WheelOfLuck
             if(IsSpinning) 
                 return;
 
-            _spinController.Spin(_itemsPack.TotalWeight, _itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
+            _spinController.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
         }
 
         private void OnSpinStart()
@@ -49,10 +49,25 @@ namespace WheelOfLuck
             IsSpinning = true;
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Spin();
+            }
+        }
+
         private void OnSpinEnd(WheelItemSO item)
         {
             IsSpinning = false;
             OnSpinEndEvent?.Invoke(item);
+
+            Debug.Log($"Label: {item.Label}\n" +
+                $"Amount: {item.Amount}");
+
+            _itemsPack.ReplaceItem(item);
+
+            _drawer.Generate();
         }
 
         public void AddOnSpinStartAction(Action action)

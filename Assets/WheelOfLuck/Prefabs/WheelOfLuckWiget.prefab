@@ -70,8 +70,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wheelSize: 1
   _wheelTransform: {fileID: 3338385949258004527}
-  _wheelPiecePrefab: {fileID: 1013547879587396, guid: de94ee490efb2cf45a7cf01d43dee1c9, type: 3}
-  _wheelPiecesParent: {fileID: 2782134129158989225}
+  _wheelItemPrefab: {fileID: 1013547879587396, guid: de94ee490efb2cf45a7cf01d43dee1c9, type: 3}
+  _wheelItemsParent: {fileID: 2782134129158989225}
   _linePrefab: {fileID: 2185511708486862109, guid: 06a3fc71588d797408848797f1b14701, type: 3}
   _linesParent: {fileID: 661727717914025604}
 --- !u!114 &2630473927636342888
@@ -86,8 +86,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84482389c1e7bb4fab1f77775642652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spinDuration: 2
+  _spinEasing: 13
   _wheelCircle: {fileID: 5516197578175535524}
-  spinDuration: 8
 --- !u!1 &3353029648910014131
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2782134129158989225}
   m_Layer: 5
-  m_Name: PiecesContainer
+  m_Name: ItemsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

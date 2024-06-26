@@ -8,12 +8,15 @@ namespace WheelOfLuck
 {
     public class SpinController : MonoBehaviour
     {
-        [Space]
-        [SerializeField] private Transform _wheelCircle;
+        [Header("Wheel settings :")]
+        [Range(1, 20)] 
+        [SerializeField] private float _spinDuration = 8;
+        [Range(1, 3)]
+        [SerializeField] private int _spinBeyond360Count = 1;
+        [SerializeField] private Ease _spinEasing = Ease.InOutQuart;
 
         [Space]
-        [Header("Wheel settings :")]
-        [Range(1, 20)] public int spinDuration = 8;
+        [SerializeField] private Transform _wheelCircle;
 
         public event Action OnSpinStart;
         public event Action<WheelItemSO> OnSpinEnd;
@@ -23,8 +26,6 @@ namespace WheelOfLuck
         private float _itemAngle;
         private float _halfItemAngle;
         private float _halfItemAngleWithPaddings;
-
-        private double _accumulatedWeight;
 
         private List<int> _grantedItemsList = new List<int>();
 
@@ -37,18 +38,16 @@ namespace WheelOfLuck
             _halfItemAngleWithPaddings = _halfItemAngle - (_halfItemAngle / 4f);
         }
 
-        public void Spin(double accumulatedWeight, int randomItemIndex, IReadOnlyList<int> nonZeroChanceItemIndexes)
+        public void Spin(int randomItemIndex, IReadOnlyList<int> selectedItemsIndexes)
         {
-            _accumulatedWeight = accumulatedWeight;
-
             OnSpinStart?.Invoke();
 
             int index = randomItemIndex;
             WheelItemSO item = _items[index];
 
-            if (item.Chance == 0 && nonZeroChanceItemIndexes.Count != 0)
+            if (item.Chance == 0 && selectedItemsIndexes.Count != 0)
             {
-                index = nonZeroChanceItemIndexes[Random.Range(0, nonZeroChanceItemIndexes.Count)];
+                index = selectedItemsIndexes[Random.Range(0, selectedItemsIndexes.Count)];
                 item = _items[index];
             }
 
@@ -59,34 +58,42 @@ namespace WheelOfLuck
 
             float randomAngle = Random.Range(leftOffset, rightOffset);
 
-            Vector3 targetRotation = Vector3.back * (randomAngle + 2 * 360 * spinDuration);
+            Vector3 targetRotation = Vector3.back * (randomAngle + _spinBeyond360Count * 360);
+            Debug.Log(targetRotation);
+            // fix offset rotation
+            targetRotation += _wheelCircle.transform.rotation.eulerAngles;
+            Debug.Log(targetRotation);
 
             float prevAngle, currentAngle;
             prevAngle = currentAngle = _wheelCircle.eulerAngles.z;
 
             bool isIndicatorOnTheLine = false;
 
-            _wheelCircle
-            .DORotate(targetRotation, spinDuration, RotateMode.Fast)
-            .SetEase(Ease.InOutQuart)
-            .OnUpdate(() => {
-                float diff = Mathf.Abs(prevAngle - currentAngle);
-                if (diff >= _halfItemAngle)
-                {
-                    if (isIndicatorOnTheLine)
-                    {
+            Sequence spinSequence = DOTween.Sequence();
 
+            spinSequence
+            .Append(
+                _wheelCircle
+                .DORotate(targetRotation, _spinDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.InOutQuart)
+                .OnUpdate(() =>
+                {
+                    float diff = Mathf.Abs(prevAngle - currentAngle);
+                    if (diff >= _halfItemAngle)
+                    {
+                        if (isIndicatorOnTheLine)
+                        {
+                            // Here you can play sound
+                        }
+                        prevAngle = currentAngle;
+                        isIndicatorOnTheLine = !isIndicatorOnTheLine;
                     }
-                    prevAngle = currentAngle;
-                    isIndicatorOnTheLine = !isIndicatorOnTheLine;
-                }
-                currentAngle = _wheelCircle.eulerAngles.z;
-            })
-            .OnComplete(() => {
+                    currentAngle = _wheelCircle.eulerAngles.z;
+                }))
+            .AppendCallback(() =>
+            {
                 OnSpinEnd?.Invoke(item);
             });
-        }
-
-        
+        }        
     }
 }

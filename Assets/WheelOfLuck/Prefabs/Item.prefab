@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224717427032141990}
   m_Layer: 0
-  m_Name: Piece
+  m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 224394519327449312}
   - component: {fileID: 114371686897001792}
   m_Layer: 0
-  m_Name: Piece Holder
+  m_Name: Item Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.0000009536743, y: 258.99982}
-  m_SizeDelta: {x: 144, y: 213}
+  m_SizeDelta: {x: 125.1, y: 192.9}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &114371686897001792
 MonoBehaviour:

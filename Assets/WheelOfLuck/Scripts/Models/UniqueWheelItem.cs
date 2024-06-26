@@ -1,8 +1,10 @@
+using UnityEngine;
+
 namespace WheelOfLuck
 {
     public class SkinWheelItem : WheelItemSO
     {
-        private string _skinName;
+        [SerializeField] private string _uniqueItemName;
 
         public override void Collect()
         {
