@@ -1,11 +1,13 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 namespace WheelOfLuck
 {
     [Serializable]
-    public class WheelPiece
+    public class WheelItem
     {
+        public bool Granted;
+
         public Sprite Icon;
         public string Label;
 
