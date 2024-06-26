@@ -29,16 +29,6 @@ namespace WheelOfLuck
             _spinController.OnSpinStart += OnSpinStart;
         }
 
-        private void OnSpinStart()
-        {
-            IsSpinning = true;
-        }
-
-        private void OnSpinEnd(WheelItem item)
-        {
-            IsSpinning = false;
-            OnSpinEndEvent?.Invoke(item);
-        }
 
         private void Start()
         {
@@ -54,6 +44,17 @@ namespace WheelOfLuck
                 return;
 
             _spinController.Spin(_accumulatedWeight, nonZeroChancesIndices);
+        }
+
+        private void OnSpinStart()
+        {
+            IsSpinning = true;
+        }
+
+        private void OnSpinEnd(WheelItem item)
+        {
+            IsSpinning = false;
+            OnSpinEndEvent?.Invoke(item);
         }
 
         public void AddOnSpinStartAction(Action action)

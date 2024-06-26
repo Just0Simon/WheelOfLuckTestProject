@@ -87,34 +87,6 @@ namespace WheelOfLuck
             });
         }
 
-        public void CalculateWeightsAndIndices()
-        {
-            for (int i = 0; i < _items.Count; i++)
-            {
-                WheelItem piece = _items[i];
-
-                //add weights:
-                _accumulatedWeight += piece.Chance;
-                piece._weight = _accumulatedWeight;
-
-                //add index :
-                piece.Index = i;
-
-                //save non zero chance indices:
-                if (piece.Chance > 0)
-                    _grantedItemsList.Add(i);
-            }
-        }
-
-        private int GetRandomPieceIndex()
-        {
-            double r = Random.Range(0, 2) * _accumulatedWeight;
-            Debug.Log(Random.Range(0, 2));
-            for (int i = 0; i < _items.Count; i++)
-                if (_items[i]._weight >= r)
-                    return i;
-
-            return 0;
-        }
+        
     }
 }
