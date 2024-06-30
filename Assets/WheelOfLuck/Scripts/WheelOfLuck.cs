@@ -13,11 +13,11 @@ namespace WheelOfLuck
 
         // Events
         public event Action OnSpinStartEvent;
-        public event Action<WheelItemSO> OnSpinEndEvent;
+        public event Action<WheelItem> OnSpinEndEvent;
 
         public bool IsSpinning { get; private set; }
 
-        private IReadOnlyList<WheelItemSO> Items => _itemsPack.Items;
+        private IReadOnlyList<WheelItem> Items => _itemsPack.Items;
         private int _minItemsCount = 2;
         private int _maxItemsCount = 12;
 
@@ -32,7 +32,7 @@ namespace WheelOfLuck
         
         private void Start()
         {
-            _drawer.Generate();
+            _drawer.DrawWheelItems();
         }
 
         [ContextMenu("Spin")]
@@ -57,27 +57,14 @@ namespace WheelOfLuck
             }
         }
 
-        private void OnSpinEnd(WheelItemSO item)
+        private void OnSpinEnd(WheelItem item)
         {
             IsSpinning = false;
             OnSpinEndEvent?.Invoke(item);
 
-            Debug.Log($"Label: {item.Label}\n" +
-                $"Amount: {item.Amount}");
-
             _itemsPack.ReplaceItem(item);
 
-            _drawer.Generate();
-        }
-
-        public void AddOnSpinStartAction(Action action)
-        {
-            OnSpinStartEvent += action;
-        }
-
-        public void AddOnSpinEndAction(Action<WheelItemSO> action)
-        {
-            OnSpinEndEvent += action;
+            _drawer.DrawWheelItems();
         }
 
         private void OnDestroy()

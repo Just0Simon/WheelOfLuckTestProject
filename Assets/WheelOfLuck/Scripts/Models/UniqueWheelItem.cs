@@ -2,13 +2,16 @@ using UnityEngine;
 
 namespace WheelOfLuck
 {
-    public class SkinWheelItem : WheelItemSO
-    {
+    [CreateAssetMenu(order = 1, fileName = "UniqueItem", menuName = "WheelOfLuck/Items/Unique")]
+    public class UniqueWheelItem : WheelItem
+    { 
+        public override string Label => _label;
+        [SerializeField] private string _label;
         [SerializeField] private string _uniqueItemName;
-
+        
         public override void Collect()
         {
-            // Custom skip apply method
+            // Custom unique item apply method
         }
     }
 }

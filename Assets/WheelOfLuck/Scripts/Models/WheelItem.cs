@@ -1,17 +1,15 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using WheelOfLuck.ReadOnly;
 
-namespace WheelOfLuck
+namespace WheelOfLuck 
 {
-    [Serializable]
-    public class WheelItem
+    [CreateAssetMenu(order = 1, fileName = "WheelItem", menuName = "WheelOfLuck/Base")]
+    public abstract class WheelItem : ScriptableObject, ICollectable, IReadOnlyWheelItem
     {
-        public bool Granted;
-
-        public Sprite Icon;
-        public string Label;
-
-        [Tooltip("Reward amount")] public int Amount;
+        public Sprite Icon => _icon; 
+        public abstract string Label { get; }
+        
+        [SerializeField] private Sprite _icon;
 
         [Tooltip("Probability in %")]
         [Range(0f, 100f)]
@@ -19,5 +17,7 @@ namespace WheelOfLuck
 
         [HideInInspector] public int Index;
         [HideInInspector] public double _weight = 0f;
+
+        public abstract void Collect();
     }
 }

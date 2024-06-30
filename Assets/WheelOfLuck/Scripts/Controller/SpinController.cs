@@ -19,17 +19,15 @@ namespace WheelOfLuck
         [SerializeField] private Transform _wheelCircle;
 
         public event Action OnSpinStart;
-        public event Action<WheelItemSO> OnSpinEnd;
+        public event Action<WheelItem> OnSpinEnd;
 
-        private IReadOnlyList<WheelItemSO> _items;
+        private IReadOnlyList<WheelItem> _items;
 
         private float _itemAngle;
         private float _halfItemAngle;
         private float _halfItemAngleWithPaddings;
-
-        private List<int> _grantedItemsList = new List<int>();
-
-        public void Initialize(IReadOnlyList<WheelItemSO> items)
+        
+        public void Initialize(IReadOnlyList<WheelItem> items)
         {
             _items = items;
 
@@ -43,25 +41,24 @@ namespace WheelOfLuck
             OnSpinStart?.Invoke();
 
             int index = randomItemIndex;
-            WheelItemSO item = _items[index];
+            WheelItem item = _items[index];
 
+            Debug.Log("Pre Label: " + item.Label);
             if (item.Chance == 0 && selectedItemsIndexes.Count != 0)
             {
                 index = selectedItemsIndexes[Random.Range(0, selectedItemsIndexes.Count)];
                 item = _items[index];
             }
-
+            Debug.Log("Pre 1 Label: " + item.Label);
+            
             float angle = -(_itemAngle * index);
 
             float rightOffset = (angle - _halfItemAngleWithPaddings) % 360;
             float leftOffset = (angle + _halfItemAngleWithPaddings) % 360;
 
             float randomAngle = Random.Range(leftOffset, rightOffset);
-
+            
             Vector3 targetRotation = Vector3.back * (randomAngle + _spinBeyond360Count * 360);
-            Debug.Log(targetRotation);
-            // fix offset rotation
-            targetRotation += _wheelCircle.transform.rotation.eulerAngles;
             Debug.Log(targetRotation);
 
             float prevAngle, currentAngle;
@@ -75,7 +72,7 @@ namespace WheelOfLuck
             .Append(
                 _wheelCircle
                 .DORotate(targetRotation, _spinDuration, RotateMode.FastBeyond360)
-                .SetEase(Ease.InOutQuart)
+                .SetEase(_spinEasing)
                 .OnUpdate(() =>
                 {
                     float diff = Mathf.Abs(prevAngle - currentAngle);
