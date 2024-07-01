@@ -55,7 +55,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemsPack: {fileID: 11400000, guid: c1d5a75cf0a791746a1343f9fe9b7b57, type: 2}
   _drawer: {fileID: 7442860724496055164}
-  _spinController: {fileID: 2630473927636342888}
+  _spinProvider: {fileID: 2630473927636342888}
+  _spinCostProvider: {fileID: 0}
 --- !u!114 &7442860724496055164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84482389c1e7bb4fab1f77775642652, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spinDuration: 2
+  _spinDuration: 5
+  _spinsBeyond360: 1
   _spinEasing: 13
   _wheelCircle: {fileID: 5516197578175535524}
 --- !u!1 &3353029648910014131

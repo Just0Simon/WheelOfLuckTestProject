@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace WheelOfLuck
 {
@@ -9,9 +10,9 @@ namespace WheelOfLuck
         [SerializeField] private WheelItemsPack _itemsPack;
         [Space]
         [SerializeField] private WheelDrawer _drawer;
-        [SerializeField] private SpinController _spinController;
-
-        // Events
+        [SerializeField] private SpinProvider _spinProvider;
+        [SerializeField] private BaseSpinCostProvider _spinCostProvider;
+        
         public event Action OnSpinStartEvent;
         public event Action<WheelItem> OnSpinEndEvent;
 
@@ -24,12 +25,14 @@ namespace WheelOfLuck
         private void Awake()
         {
             _drawer.Initialize(Items, _minItemsCount, _maxItemsCount);
-            _spinController.Initialize(Items);
-            
-            _spinController.OnSpinStart += OnSpinStart;
-            _spinController.OnSpinEnd += OnSpinEnd;
+            _spinProvider.Initialize(Items);
         }
-        
+
+        private void OnSpinAvailableUpdated(bool available)
+        {
+            
+        }
+
         private void Start()
         {
             _drawer.DrawWheelItems();
@@ -41,20 +44,12 @@ namespace WheelOfLuck
             if(IsSpinning) 
                 return;
 
-            _spinController.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
+            _spinProvider.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
         }
 
         private void OnSpinStart()
         {
             IsSpinning = true;
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Spin();
-            }
         }
 
         private void OnSpinEnd(WheelItem item)
@@ -67,10 +62,20 @@ namespace WheelOfLuck
             _drawer.DrawWheelItems();
         }
 
-        private void OnDestroy()
+        private void OnEnable()
         {
-            OnSpinStartEvent = null;
-            OnSpinEndEvent = null;
+            _spinProvider.OnSpinStart += OnSpinStart;
+            _spinProvider.OnSpinEnd += OnSpinEnd;
+            
+            _spinCostProvider.SpinAvailableUpdated += OnSpinAvailableUpdated;
+        }
+
+        private void OnDisable()
+        {
+            _spinProvider.OnSpinStart -= OnSpinStart;
+            _spinProvider.OnSpinEnd -= OnSpinEnd;
+
+            _spinCostProvider.SpinAvailableUpdated -= OnSpinAvailableUpdated;
         }
     }
 }

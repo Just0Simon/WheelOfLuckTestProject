@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d57833d0c8dae46af907fa34e928ec, type: 3}
   m_Name: Granted_2_UniqueItem
   m_EditorClassIdentifier: 
-  _icon: {fileID: 0}
+  _icon: {fileID: -1391783789, guid: 10a4d77aaba73fb4e8816652ac0b50e2, type: 3}
   Chance: 100
   Index: 0
   _weight: 0
-  _label: 
+  _label: g 2
   _uniqueItemName: 

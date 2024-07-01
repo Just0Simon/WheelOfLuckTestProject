@@ -21,8 +21,10 @@ namespace WheelOfLuck
         [Header("What it will consist of")]
         [SerializeField] private int _consumableItemsCount = 3;
         [SerializeField] private int _uniqueItemsCount = 2;
-        
+
         [Header("Pool of wheel's items")]
+        [Tooltip("Will drop as ordered")]
+        [SerializeField] private List<WheelItem> _grantedItems;
         [SerializeField] private List<WheelItem> _itemsPool;
         
         private double _accumulatedWeight;
@@ -85,10 +87,60 @@ namespace WheelOfLuck
                 _selectedItemIndexes.Add(i);
             }
         }
-
+        
+        
         private void OnValidate()
         {
+            ValidateWheelItems();
+            
             ValidateItemsPool();
+            
+            CalculateWeightsAndIndices();
+        }
+
+        private int previousParam1;
+        private int previousParam2;
+        private void ValidateWheelItems()
+        {
+            if (_consumableItemsCount < 0)
+                _consumableItemsCount = previousParam1;
+            
+            if (_uniqueItemsCount < 0)
+                _uniqueItemsCount = previousParam2;
+
+            if (_consumableItemsCount != previousParam1 && _consumableItemsCount <= _itemsOnWheelCount)
+            {
+                _uniqueItemsCount = _itemsOnWheelCount - _consumableItemsCount;
+            }
+            else if (_uniqueItemsCount != previousParam2 && _uniqueItemsCount <= _itemsOnWheelCount)
+            {
+                _consumableItemsCount = _itemsOnWheelCount - _uniqueItemsCount;
+            }
+            else
+            {
+                _consumableItemsCount = previousParam1;
+                _uniqueItemsCount = previousParam2;
+            }
+            
+            if (_itemsOnWheelCount != _consumableItemsCount + _uniqueItemsCount)
+            {
+                if(_itemsOnWheelCount > _consumableItemsCount + _uniqueItemsCount)
+                    _consumableItemsCount += _itemsOnWheelCount - _consumableItemsCount - _uniqueItemsCount;
+                if (_itemsOnWheelCount < _consumableItemsCount + _uniqueItemsCount)
+                {
+                    if (_consumableItemsCount > _uniqueItemsCount)
+                    {
+                        _consumableItemsCount -= Mathf.Abs(_itemsOnWheelCount - _consumableItemsCount - _uniqueItemsCount);
+                    }
+                    else
+                    {
+                        _uniqueItemsCount -= Mathf.Abs(_itemsOnWheelCount - _consumableItemsCount - _uniqueItemsCount); 
+                    }
+                }
+            }
+            
+            previousParam1 = _consumableItemsCount;
+            previousParam2 = _uniqueItemsCount;
         }
 
         private void ValidateItemsPool()
@@ -104,40 +156,42 @@ namespace WheelOfLuck
             int uniqueAdded = 0;
 
             _selectedItems.Clear();
-            
-            foreach (var item in _itemsPool)
-            {
-                if (item is CurrencyWheelItem && consumableAdded < _consumableItemsCount)
-                {
-                    _selectedItems.Add(item);
-                    consumableAdded++;
-                }
-                else if (item is UniqueWheelItem && uniqueAdded < _uniqueItemsCount)
-                {
-                    _selectedItems.Add(item);
-                    uniqueAdded++;
-                }
 
-                if (consumableAdded == _consumableItemsCount && uniqueAdded == _uniqueItemsCount)
+            int addedGrantedItems = _grantedCollectedItemsCount;
+            
+            while (_firstItemGrantedCount != 0 && addedGrantedItems < _firstItemGrantedCount)
+            {
+                _selectedItems.Add(_grantedItems[addedGrantedItems]);
+                addedGrantedItems++;
+
+                if (_selectedItems.Count == _itemsOnWheelCount)
                 {
-                    break;
+                    return;
+                }
+            }
+
+            while (_selectedItems.Count != _itemsOnWheelCount)
+            {
+                foreach (var item in _itemsPool)
+                {
+                    if (item is CurrencyWheelItem && consumableAdded < _consumableItemsCount)
+                    {
+                        _selectedItems.Add(item);
+                        consumableAdded++;
+                    }
+                    else if (item is UniqueWheelItem && uniqueAdded < _uniqueItemsCount)
+                    {
+                        _selectedItems.Add(item);
+                        uniqueAdded++;
+                    }
+
+                    if (_selectedItems.Count == _itemsOnWheelCount)
+                    {
+                        break;
+                    }
                 }
             }
             
-            Debug.Log(_selectedItems);
-            
-            _selectedItems = _selectedItems.OrderBy(a => Random.Range(0, 2)).ToList(); // Shuffle using LINQ
-            Debug.Log(_selectedItems);
-            
-            /*
-            int selectedItemsCount = _itemsPool.Count < _maxItemsOnWheel ? _itemsPool.Count : _maxItemsOnWheel;
-            // Define index from to select 
-            int indexFrom = _grantedCollectedItemsCount == _firstItemGrantedCount ? 0 : _grantedCollectedItemsCount;
-            // Clamp items count for GetRange to prevent exception IndexOutOfBounds.
-            int itemsCount = Mathf.Clamp(_grantedCollectedItemsCount + selectedItemsCount, 0 , _itemsPool.Count - _grantedCollectedItemsCount);
-            _selectedItems = new List<WheelItem>(_itemsPool.GetRange(_grantedCollectedItemsCount, selectedItemsCount));
-*/
-            CalculateWeightsAndIndices();
         }
 
         [ContextMenu("Custom Reset")]

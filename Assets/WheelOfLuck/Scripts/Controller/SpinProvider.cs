@@ -6,13 +6,13 @@ using Random = UnityEngine.Random;
 
 namespace WheelOfLuck
 {
-    public class SpinController : MonoBehaviour
+    public class SpinProvider : MonoBehaviour
     {
         [Header("Wheel settings :")]
         [Range(1, 20)] 
         [SerializeField] private float _spinDuration = 8;
         [Range(1, 3)]
-        [SerializeField] private int _spinBeyond360Count = 1;
+        [SerializeField] private int _spinsBeyond360 = 1;
         [SerializeField] private Ease _spinEasing = Ease.InOutQuart;
 
         [Space]
@@ -43,13 +43,11 @@ namespace WheelOfLuck
             int index = randomItemIndex;
             WheelItem item = _items[index];
 
-            Debug.Log("Pre Label: " + item.Label);
             if (item.Chance == 0 && selectedItemsIndexes.Count != 0)
             {
                 index = selectedItemsIndexes[Random.Range(0, selectedItemsIndexes.Count)];
                 item = _items[index];
             }
-            Debug.Log("Pre 1 Label: " + item.Label);
             
             float angle = -(_itemAngle * index);
 
@@ -58,10 +56,14 @@ namespace WheelOfLuck
 
             float randomAngle = Random.Range(leftOffset, rightOffset);
             
-            Vector3 targetRotation = Vector3.back * (randomAngle + _spinBeyond360Count * 360);
-            Debug.Log(targetRotation);
-
+            Vector3 targetRotation = Vector3.back * (randomAngle + _spinsBeyond360 * 360);
+            if (Mathf.Abs(targetRotation.magnitude) < 360)
+            {
+                targetRotation.z -= 360f;
+            }
+            
             float prevAngle, currentAngle;
+            
             prevAngle = currentAngle = _wheelCircle.eulerAngles.z;
 
             bool isIndicatorOnTheLine = false;
