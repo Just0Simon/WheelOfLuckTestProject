@@ -12,8 +12,7 @@ namespace WheelOfLuck
         public List<WheelItem> Items => _selectedItems;
         public IReadOnlyList<int> NonZeroChanceItemIndexes => _selectedItemIndexes;
         public double TotalWeight => _accumulatedWeight;
-
-        [Range(0, 5)]
+        
         [SerializeField] private int _firstItemGrantedCount = 2;
         [SerializeField] private int _itemsOnWheelCount = 5;
         private int _grantedCollectedItemsCount = 0;

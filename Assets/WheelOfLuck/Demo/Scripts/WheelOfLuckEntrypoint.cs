@@ -1,5 +1,7 @@
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace WheelOfLuck.Demo
@@ -8,16 +10,20 @@ namespace WheelOfLuck.Demo
     {
         [SerializeField] private RewardWidget _rewardWidget;
         [SerializeField] private WheelOfLuck _wheelOfLuck;
+        [SerializeField] private CurrencySpinCostProvider _spinCostProvider;
         [SerializeField] private Button _spinButton;
-
+        [SerializeField] private TMP_Text _currencyText;
+        [SerializeField] private Button _addCurrencyButton;
+        
         private void Awake()
         {
             _spinButton.onClick.AddListener(OnSpinButtonPressed);
+            _addCurrencyButton.onClick.AddListener(() => _spinCostProvider.AddCurrency(50));
         }
 
         private void OnEnable()
         {
-            _wheelOfLuck.OnSpinEndEvent += OnSpinEnd;
+            _wheelOfLuck.SpinEnded += SpinEnded;
         }
 
         private void OnSpinButtonPressed()
@@ -26,7 +32,7 @@ namespace WheelOfLuck.Demo
             _wheelOfLuck.Spin();
         }
         
-        private void OnSpinEnd(WheelItem item)
+        private void SpinEnded(WheelItem item)
         {
             _spinButton.interactable = true;
             _rewardWidget.ShowItem(item);
@@ -34,7 +40,7 @@ namespace WheelOfLuck.Demo
 
         private void OnDisable()
         {
-            _wheelOfLuck.OnSpinEndEvent -= OnSpinEnd;
+            _wheelOfLuck.SpinEnded -= SpinEnded;
         }
     }
 }

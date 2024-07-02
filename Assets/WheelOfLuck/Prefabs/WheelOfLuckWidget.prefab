@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1373168299621861497}
   - component: {fileID: 7442860724496055164}
   - component: {fileID: 2630473927636342888}
+  - component: {fileID: 7170617265992142995}
   m_Layer: 5
   m_Name: WheelOfLuckWidget
   m_TagString: Untagged
@@ -56,7 +57,8 @@ MonoBehaviour:
   _itemsPack: {fileID: 11400000, guid: c1d5a75cf0a791746a1343f9fe9b7b57, type: 2}
   _drawer: {fileID: 7442860724496055164}
   _spinProvider: {fileID: 2630473927636342888}
-  _spinCostProvider: {fileID: 0}
+  _spinCostProvider: {fileID: 7170617265992142995}
+  _spinButton: {fileID: 0}
 --- !u!114 &7442860724496055164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +93,21 @@ MonoBehaviour:
   _spinsBeyond360: 1
   _spinEasing: 13
   _wheelCircle: {fileID: 5516197578175535524}
+--- !u!114 &7170617265992142995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 441846917480254944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0719d849e7718ce4b9e095e43c79cc8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _firstFreeSpinKey: firstFreeSpin
+  _coins: 0
+  _spinCost: 100
 --- !u!1 &3353029648910014131
 GameObject:
   m_ObjectHideFlags: 0

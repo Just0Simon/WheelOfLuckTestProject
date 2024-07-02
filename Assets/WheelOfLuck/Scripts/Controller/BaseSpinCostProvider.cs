@@ -10,6 +10,8 @@ namespace WheelOfLuck
         public event Action<bool> SpinAvailableUpdated;
 
         protected abstract void UpdateAvailable();
+
+        public abstract void OnSpinStart();
         
         protected virtual void OnSpinAvailableUpdated(bool available)
         {

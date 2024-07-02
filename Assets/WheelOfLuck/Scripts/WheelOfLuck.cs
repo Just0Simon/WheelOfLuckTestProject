@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace WheelOfLuck
 {
@@ -12,9 +12,10 @@ namespace WheelOfLuck
         [SerializeField] private WheelDrawer _drawer;
         [SerializeField] private SpinProvider _spinProvider;
         [SerializeField] private BaseSpinCostProvider _spinCostProvider;
+        [SerializeField] private Button _spinButton;
         
-        public event Action OnSpinStartEvent;
-        public event Action<WheelItem> OnSpinEndEvent;
+        public event Action SpinStarted;
+        public event Action<WheelItem> SpinEnded;
 
         public bool IsSpinning { get; private set; }
 
@@ -26,19 +27,17 @@ namespace WheelOfLuck
         {
             _drawer.Initialize(Items, _minItemsCount, _maxItemsCount);
             _spinProvider.Initialize(Items);
-        }
-
-        private void OnSpinAvailableUpdated(bool available)
-        {
             
-        }
-
-        private void Start()
-        {
             _drawer.DrawWheelItems();
-        }
+            
+            _spinProvider.OnSpinStart += SpinStartEventAction;
+            _spinProvider.OnSpinEnd += SpinEndEventAction;
+            
+            _spinCostProvider.SpinAvailableUpdated += OnSpinAvailableUpdated;
 
-        [ContextMenu("Spin")]
+            SpinStarted += _spinCostProvider.OnSpinStart;
+        }
+        
         public void Spin()
         {
             if(IsSpinning) 
@@ -47,35 +46,35 @@ namespace WheelOfLuck
             _spinProvider.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
         }
 
-        private void OnSpinStart()
+        private void SpinStartEventAction()
         {
             IsSpinning = true;
+            SpinStarted?.Invoke();
         }
 
-        private void OnSpinEnd(WheelItem item)
+        private void SpinEndEventAction(WheelItem item)
         {
             IsSpinning = false;
-            OnSpinEndEvent?.Invoke(item);
+            SpinEnded?.Invoke(item);
 
             _itemsPack.ReplaceItem(item);
 
             _drawer.DrawWheelItems();
         }
 
-        private void OnEnable()
+        private void OnSpinAvailableUpdated(bool available)
         {
-            _spinProvider.OnSpinStart += OnSpinStart;
-            _spinProvider.OnSpinEnd += OnSpinEnd;
-            
-            _spinCostProvider.SpinAvailableUpdated += OnSpinAvailableUpdated;
+            _spinButton.interactable = available;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
-            _spinProvider.OnSpinStart -= OnSpinStart;
-            _spinProvider.OnSpinEnd -= OnSpinEnd;
+            _spinProvider.OnSpinStart -= SpinStartEventAction;
+            _spinProvider.OnSpinEnd -= SpinEndEventAction;
 
             _spinCostProvider.SpinAvailableUpdated -= OnSpinAvailableUpdated;
+            
+            SpinStarted -= _spinCostProvider.OnSpinStart;
         }
     }
 }
