@@ -10,7 +10,7 @@ namespace WheelOfLuck
         [SerializeField] private WheelItemsPack _itemsPack;
         [Space]
         [SerializeField] private WheelDrawer _drawer;
-        [SerializeField] private SpinProvider _spinProvider;
+        [SerializeField] private SpinController _spinController;
         [SerializeField] private BaseSpinCostProvider _spinCostProvider;
         [SerializeField] private Button _spinButton;
         
@@ -26,12 +26,12 @@ namespace WheelOfLuck
         private void Awake()
         {
             _drawer.Initialize(Items, _minItemsCount, _maxItemsCount);
-            _spinProvider.Initialize(Items);
+            _spinController.Initialize(Items);
             
             _drawer.DrawWheelItems();
             
-            _spinProvider.OnSpinStart += SpinStartEventAction;
-            _spinProvider.OnSpinEnd += SpinEndEventAction;
+            _spinController.OnSpinStart += SpinStartEventAction;
+            _spinController.OnSpinEnd += SpinEndEventAction;
             
             _spinCostProvider.SpinAvailableUpdated += OnSpinAvailableUpdated;
 
@@ -43,7 +43,7 @@ namespace WheelOfLuck
             if(IsSpinning) 
                 return;
 
-            _spinProvider.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
+            _spinController.Spin(_itemsPack.GetRandomItemIndex(), _itemsPack.NonZeroChanceItemIndexes);
         }
 
         private void SpinStartEventAction()
@@ -69,8 +69,8 @@ namespace WheelOfLuck
 
         private void OnDestroy()
         {
-            _spinProvider.OnSpinStart -= SpinStartEventAction;
-            _spinProvider.OnSpinEnd -= SpinEndEventAction;
+            _spinController.OnSpinStart -= SpinStartEventAction;
+            _spinController.OnSpinEnd -= SpinEndEventAction;
 
             _spinCostProvider.SpinAvailableUpdated -= OnSpinAvailableUpdated;
             

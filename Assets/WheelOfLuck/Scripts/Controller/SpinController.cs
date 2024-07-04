@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace WheelOfLuck
 {
-    public class SpinProvider : MonoBehaviour
+    public class SpinController : MonoBehaviour
     {
         [Header("Wheel settings :")]
         [Range(1, 20)] 

@@ -3,7 +3,6 @@ using WheelOfLuck.ReadOnly;
 
 namespace WheelOfLuck 
 {
-    [CreateAssetMenu(order = 1, fileName = "WheelItem", menuName = "WheelOfLuck/Base")]
     public abstract class WheelItem : ScriptableObject, ICollectable, IReadOnlyWheelItem
     {
         public Sprite Icon => _icon; 
