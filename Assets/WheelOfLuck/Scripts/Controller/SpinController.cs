@@ -62,9 +62,9 @@ namespace WheelOfLuck
                 targetRotation.z -= 360f;
             }
             
-            float prevAngle, currentAngle;
+            float currentAngle;
             
-            prevAngle = currentAngle = _wheelCircle.eulerAngles.z;
+            var prevAngle = currentAngle = _wheelCircle.eulerAngles.z;
 
             bool isIndicatorOnTheLine = false;
 

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _firstItemGrantedCount: 2
   _itemsOnWheelCount: 5
-  _consumableItemsCount: 2
-  _uniqueItemsCount: 3
+  _consumableItemsCount: 3
+  _uniqueItemsCount: 2
   _grantedItems:
   - {fileID: 11400000, guid: 05eda5ad95ff1ce4db2de1d4b7d603fb, type: 2}
   - {fileID: 11400000, guid: 22bab1523d816f34fa8ae502b1d49400, type: 2}
@@ -29,8 +29,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 35e56b2d4cb994c4e9f057d2147120dd, type: 2}
   - {fileID: 11400000, guid: 905a38c4ab0e20949a73e9d4c523b0f6, type: 2}
   _selectedItems:
+  - {fileID: 11400000, guid: 05eda5ad95ff1ce4db2de1d4b7d603fb, type: 2}
+  - {fileID: 11400000, guid: 22bab1523d816f34fa8ae502b1d49400, type: 2}
   - {fileID: 11400000, guid: 1515fd526877c0f4e9d94a6ded554294, type: 2}
   - {fileID: 11400000, guid: 0b28fb5a196622540a6669236a3a4ebe, type: 2}
   - {fileID: 11400000, guid: 3148a359f07eb4342a70ab75fe04f5a4, type: 2}
-  - {fileID: 11400000, guid: 56d1e58082b22734f8be4018a5198218, type: 2}
-  - {fileID: 11400000, guid: 70ed75455484e5844bb63cf427ea9f5b, type: 2}

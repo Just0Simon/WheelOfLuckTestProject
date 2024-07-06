@@ -17,34 +17,30 @@ namespace WheelOfLuck
         [SerializeField] private GameObject _linePrefab;
         [SerializeField] private Transform _linesParent;
 
-        private int _minItems;
-        private int _maxItems;
-        private Vector2 _itemMinSize = new Vector2(81f, 146f);
-        private Vector2 _itemMaxSize = new Vector2(144f, 213f);
+        private readonly Vector2 _itemMinSize = new Vector2(81f, 146f);
+        private readonly Vector2 _itemMaxSize = new Vector2(144f, 213f);
 
         private float _itemAngle;
         private float _halfItemAngle;
-        private float _halfItemAngleWithPaddings;
         private IReadOnlyList<WheelItem> _items;
 
         private List<WheelItemSlot> _wheelItemSlotList;
 
-        public void Initialize(IReadOnlyList<WheelItem> items, int minItems, int maxItems)
+        private readonly int _minItemsCount = 2;
+        private readonly int _maxItemsCount = 12;
+        
+        public void Initialize(IReadOnlyList<WheelItem> items)
         {
             _wheelItemSlotList = new List<WheelItemSlot>(items.Count);
             
             _items = items;
-            _minItems = minItems;
-            _maxItems = maxItems;
-
             _itemAngle = 360f / _items.Count;
 
             _halfItemAngle = _itemAngle / 2f;
-            _halfItemAngleWithPaddings = _halfItemAngle - (_halfItemAngle / 4f);
 
             RectTransform rt = _wheelItemPrefab.transform.GetChild(0).GetComponent<RectTransform>();
-            float itemWidth = Mathf.Lerp(_itemMinSize.x, _itemMaxSize.x, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
-            float itemHeight = Mathf.Lerp(_itemMinSize.y, _itemMaxSize.y, 1f - Mathf.InverseLerp(_minItems, _maxItems, _items.Count));
+            float itemWidth = Mathf.Lerp(_itemMinSize.x, _itemMaxSize.x, 1f - Mathf.InverseLerp(_minItemsCount, _maxItemsCount, _items.Count));
+            float itemHeight = Mathf.Lerp(_itemMinSize.y, _itemMaxSize.y, 1f - Mathf.InverseLerp(_minItemsCount, _maxItemsCount, _items.Count));
 
             rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, itemWidth);
             rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, itemHeight);

@@ -1,4 +1,4 @@
-# Wheel Of Luck Package Documentation
+# Wheel Of Luck - Usage example
  
 ## Overview
 

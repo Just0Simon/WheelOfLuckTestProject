@@ -20,12 +20,10 @@ namespace WheelOfLuck
         public bool IsSpinning { get; private set; }
 
         private IReadOnlyList<WheelItem> Items => _itemsPack.Items;
-        private int _minItemsCount = 2;
-        private int _maxItemsCount = 12;
 
         private void Awake()
         {
-            _drawer.Initialize(Items, _minItemsCount, _maxItemsCount);
+            _drawer.Initialize(Items);
             _spinController.Initialize(Items);
             
             _drawer.DrawWheelItems();
