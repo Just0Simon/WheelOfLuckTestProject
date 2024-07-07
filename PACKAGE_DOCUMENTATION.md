@@ -23,20 +23,20 @@ The WheelOfLuck package provides a tools for creating and managing a "Wheel of L
 
 ## Architecture
 ### Interfaces
-- ICollectable +
-- IReadOnlyWheelItem + 
+- ICollectable
+- IReadOnlyWheelItem
 ### Abstract Classes 
-- BaseSpinCostProvider +
-- WheelItem : IReadOnlyWheelItem, ICollectable +
+- BaseSpinCostProvider
+- WheelItem : IReadOnlyWheelItem, ICollectable
 ### Models
-- WheelItemsPack +
+- WheelItemsPack
 ### Controllers
-- SpinController +
-- BaseSpinCostProvider +
+- SpinController
+- BaseSpinCostProvider
 ### View
-- WheelDrawer +
+- WheelDrawer
 ### Editor
-- WheelItemsPackEditor + 
+- WheelItemsPackEditor
 ### Main Class
 - WheelOfLuck
 
@@ -133,7 +133,7 @@ Debug.Log("Item icon: " + coinItem.Icon.name);
 </details>
 
 <details open>
-<summary>Wheel Item Class</summary>
+<summary><h2>Wheel Item Class</h2></summary>
 
 ## WheelItem Class
 ### Overview
