@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9438656e1384f22438e8f13bf417b784, type: 3}
   m_Name: CurrencyItem_3
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: 46e00bbdebb693b419d6d6798eb4f9cf, type: 3}
+  _icon: {fileID: 21300000, guid: 31449340a90834446be0e8be392696a1, type: 3}
   Chance: 50
   Index: 0
   _weight: 0
