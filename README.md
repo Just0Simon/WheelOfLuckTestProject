@@ -108,15 +108,15 @@ public class CurrencyWheelItem : WheelItem
     3. Select on of wheel item types
     4. Configure items pack(add granted items, items pool, etc.)
 
-![Wheel Items Pack](image.png)
+![Wheel Items Pack](Images/image.png)
 
 ### 8. Create Spin Button and reference it to WheelOfLuck component property
-![Wheel of Luck Component - Spin Button](image-1.png)
+![Wheel of Luck Component - Spin Button](Images/image-1.png)
 ### 9. Add concrate Spin Cost Provider script to WheelOfLuck object and add refecrence to WheelOfLuck component
-![Wheel of Luck Component && Spin Cost Provider](image-2.png)
+![Wheel of Luck Component && Spin Cost Provider](Images/image-2.png)
 
 ### 10. Reference Wheel Items Pack asset to WheelOfLuck component property
-![Wheel of Luck Component - Items Pack](img.png)
+![Wheel of Luck Component - Items Pack](Images/img.png)
 
 ## Architecture
 ### Interfaces
